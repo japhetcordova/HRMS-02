@@ -39,12 +39,46 @@ router.get('/', authenticateToken, async (req, res) => {
 // Protected: Create employee
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const employee = new Employee(req.body);
+        // Validate required fields
+        const { name, email, department, position } = req.body;
+        if (!name || !email || !department || !position) {
+        return res.status(400).json({ 
+         message: 'Missing required fields: name, email, department, position' 
+        });
+        }
+
+        // Check for duplicate email
+    const existingEmployee = await Employee.findOne({ 'contact.email': email });
+    if (existingEmployee) {
+      return res.status(409).json({ message: 'Employee with this email already exists' });
+     }
+      
+    const employeeData = {
+       name,
+       contact: {
+         email,
+         phone: req.body.phone,
+         address: req.body.address
+       },
+       department,
+       position,
+       status: req.body.status || 'active'
+     };
+     
+    const employee = new Employee(employeeData);
     await employee.save();
     res.status(201).json(employee);
-  } catch (err) {
-    res.status(400).json({ message: 'Error creating employee' });
-  }
+
+    } 
+    
+catch (err) {
+    console.error('Error creating employee:', err);
+    if (err.name === 'ValidationError') {
+    return res.status(400).json({ message: err.message });
+    }
+    res.status(500).json({ message: 'Failed to create employee' });
+}
+
 });
 
 export default router;
