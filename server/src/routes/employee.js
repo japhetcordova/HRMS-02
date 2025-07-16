@@ -41,6 +41,13 @@ router.post('/', authenticateToken, async (req, res) => {
   try {
         // Validate required fields
         const { name, email, department, position } = req.body;
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email && !emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+        
         if (!name || !email || !department || !position) {
         return res.status(400).json({ 
          message: 'Missing required fields: name, email, department, position' 
