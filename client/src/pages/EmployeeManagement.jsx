@@ -19,7 +19,8 @@ const EmployeeManagement = () => {
     setError('');
     try {
       const data = await fetchEmployees(token);
-      setEmployees(Array.isArray(data) ? data : Array.isArray(data.employees) ? data.employees : []);
+      // Ensure employees is always an array
+      setEmployees(Array.isArray(data) ? data : data.employees || []);
     } catch (err) {
         console.log(err);
       setError('Failed to fetch employees');
