@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../components/AuthContext';
+import useAuth from '../components/useAuth';
 import { fetchEmployees } from '../services/api';
 
 const EmployeeManagement = () => {
