@@ -1,3 +1,28 @@
+## Test Login Credentials
+
+To log in from the frontend Login page for testing, use the credentials of a user that exists in your MongoDB database.
+
+If you have not registered a user yet, you can create one using the backend API (e.g., with Postman or curl):
+
+POST http://localhost:5000/api/auth/register
+
+Example request body:
+
+```
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "test123",
+  "role": "admin"
+}
+```
+
+Then use:
+
+- **Email:** test@example.com
+- **Password:** test123
+
+on the Login page.
 HRMS built from refactored MVP
 # HRMS-02
 Human Resource Management System (MERN Stack)
