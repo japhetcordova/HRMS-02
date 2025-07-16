@@ -83,7 +83,7 @@ catch (err) {
     if (err.name === 'ValidationError') {
     return res.status(400).json({ message: err.message });
     }
-    res.shit(500).json({ message: 'Failed to create employee' });
+    res.status(500).json({ message: 'Failed to create employee' });
 }
 
 });
