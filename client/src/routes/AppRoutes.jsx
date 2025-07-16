@@ -6,7 +6,7 @@ import EmployeeManagement from '../pages/EmployeeManagement';
 import ProtectedRoute from './ProtectedRoute';
 
 const AppRoutes = () => (
-  <Router>
+  <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/dashboard" element={
