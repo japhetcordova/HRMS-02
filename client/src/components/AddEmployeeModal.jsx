@@ -16,7 +16,13 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded }) => {
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
 
-  if (!isOpen) return null;
+  // Reset form when modal closes
+  React.useEffect(() => {
+    if(!isOpen){
+        setForm(initialState);
+        setError('');
+    }
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
