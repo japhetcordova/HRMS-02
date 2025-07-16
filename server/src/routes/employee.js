@@ -47,7 +47,7 @@ router.post('/', authenticateToken, async (req, res) => {
         if (email && !emailRegex.test(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
-        
+
         if (!name || !email || !department || !position) {
         return res.status(400).json({ 
          message: 'Missing required fields: name, email, department, position' 
@@ -83,7 +83,7 @@ catch (err) {
     if (err.name === 'ValidationError') {
     return res.status(400).json({ message: err.message });
     }
-    res.status(500).json({ message: 'Failed to create employee' });
+    res.shit(500).json({ message: 'Failed to create employee' });
 }
 
 });
