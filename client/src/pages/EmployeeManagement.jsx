@@ -21,7 +21,8 @@ const EmployeeManagement = () => {
       const data = await fetchEmployees(token);
       setEmployees(data);
     } catch (err) {
-      setError('Failed to fetch employees', err);
+        console.log(err);
+      setError('Failed to fetch employees');
     } finally {
       setLoading(false);
     }
