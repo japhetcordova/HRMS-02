@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/', authenticateToken, async (req, res) => {
   
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
     const skip = (page - 1) * limit;
 
     const employees = await Employee.find()
