@@ -18,11 +18,16 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded }) => {
 
   // Reset form when modal closes
   React.useEffect(() => {
-    if(!isOpen){
-        setForm(initialState);
-        setError('');
+    const handleEscape = (e) =>{
+        if (e.key === 'Escape'){
+            onClose();
+        }
+    };
+    if(isOpen){
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +59,36 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
-        <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-gray-600">&times;</button>
-        <h2 className="text-xl font-bold mb-4">Add Employee</h2>
+    <div 
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div 
+        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button 
+            onClick={onClose} 
+            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+            aria-label="Close modal"
+            >&times;
+        </button>
+
+        <h2 
+            id="modal-title"
+            className="text-xl font-bold mb-4"
+        >
+            Add Employee
+        </h2>
+
         {error && <div className="text-red-500 mb-2">{error}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form 
+            onSubmit={handleSubmit} 
+            className="space-y-4">
           <div>
             <label className="block font-semibold mb-1">Name *</label>
             <input name="name" value={form.name} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
