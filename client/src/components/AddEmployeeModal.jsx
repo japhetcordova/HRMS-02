@@ -47,7 +47,14 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded }) => {
     }
     setLoading(true);
     try {
-      await addEmployee(form, token);
+      // Flatten contact fields for backend compatibility
+      const payload = {
+        ...form,
+        email: form.contact.email,
+        phone: form.contact.phone,
+        address: form.contact.address,
+      };
+      await addEmployee(payload, token);
       setForm(initialState);
       onEmployeeAdded();
       onClose();
