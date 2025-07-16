@@ -6,12 +6,34 @@ const router = express.Router();
 
 // Protected: Get all employees
 router.get('/', authenticateToken, async (req, res) => {
+  
   try {
-    const employees = await Employee.find();
-    res.json(employees);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const employees = await Employee.find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+        const total = await Employee.countDocuments();
+        res.json({
+            employees,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        });
+  } 
+  
+  catch (err) {
+    console.error('Error fetching employees:', err);
+    res.status(500).json({ message: 'Failed to fetch employees' });
   }
+
 });
 
 // Protected: Create employee
