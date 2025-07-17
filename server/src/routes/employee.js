@@ -187,4 +187,19 @@ router.patch('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+
+// Protected: Delete employee
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const employee = await Employee.findByIdAndDelete(req.params.id);
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+    res.json({ message: 'Employee deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting employee:', err);
+    res.status(500).json({ message: 'Failed to delete employee' });
+  }
+});
+
 export default router;
