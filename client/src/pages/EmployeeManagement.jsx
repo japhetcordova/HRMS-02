@@ -65,10 +65,10 @@ const EmployeeManagement = () => {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-4">Employee Management</h1>
+    <div className="p-4 sm:p-8 w-full max-w-7xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4">Employee Management</h1>
       <button
-        className="mb-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-semibold"
+        className="mb-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-semibold w-full sm:w-auto"
         onClick={() => setShowAddModal(true)}
       >
         Add Employee
@@ -93,32 +93,32 @@ const EmployeeManagement = () => {
         <p className="text-red-500">{error}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border rounded shadow">
+          <table className="min-w-full bg-white border rounded shadow text-xs sm:text-sm md:text-base">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b">Department</th>
-                <th className="py-2 px-4 border-b">Position</th>
-                <th className="py-2 px-4 border-b">Status</th>
-                <th className="py-2 px-4 border-b">Actions</th>
+                <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Name</th>
+                <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Department</th>
+                <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Position</th>
+                <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Status</th>
+                <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
               {employees.map((emp) => (
                 <tr key={emp._id}>
-                  <td className="py-2 px-4 border-b">{emp.name}</td>
-                  <td className="py-2 px-4 border-b">{emp.department}</td>
-                  <td className="py-2 px-4 border-b">{emp.position}</td>
-                  <td className="py-2 px-4 border-b">{emp.status}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.name}</td>
+                  <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.department}</td>
+                  <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.position}</td>
+                  <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.status}</td>
+                  <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">
                     <button
-                      className="px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 mr-2"
+                      className="px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 mr-2 w-full sm:w-auto mb-1 sm:mb-0"
                       onClick={() => handleEdit(emp)}
                     >
                       Edit
                     </button>
                     <button
-                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 w-full sm:w-auto"
                       onClick={() => handleDelete(emp)}
                     >
                       Delete

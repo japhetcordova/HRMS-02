@@ -24,10 +24,10 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
-        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-2 sm:p-0">
+      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-8 rounded shadow-md w-full max-w-md">
+        <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">Login</h1>
+        {error && <div className="text-red-500 mb-4 text-center text-xs sm:text-base">{error}</div>}
         <div className="mb-4">
           <label className="block mb-1 font-semibold">Email</label>
           <input
@@ -48,7 +48,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold">Login</button>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold text-xs sm:text-base">Login</button>
       </form>
     </div>
   );
