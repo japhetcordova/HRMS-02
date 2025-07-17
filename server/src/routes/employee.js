@@ -1,45 +1,8 @@
-
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
 import Employee from '../models/Employee.js';
 
 const router = express.Router();
-
-// Protected: Partially update employee
-router.patch('/:id', authenticateToken, async (req, res) => {
-  try {
-    const allowedFields = ['name', 'department', 'position', 'status', 'email', 'phone', 'address'];
-    const updateData = {};
-    for (const field of allowedFields) {
-      if (req.body[field] !== undefined) {
-        if (['email', 'phone', 'address'].includes(field)) {
-          updateData.contact = updateData.contact || {};
-          updateData.contact[field] = req.body[field];
-        } else {
-          updateData[field] = req.body[field];
-        }
-      }
-    }
-    const employee = await Employee.findByIdAndUpdate(
-      req.params.id,
-      { $set: updateData },
-      { new: true, runValidators: true }
-    );
-    if (!employee) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-    res.json(employee);
-  } catch (err) {
-    console.error('Error patching employee:', err);
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ message: err.message });
-    }
-    res.status(500).json({ message: 'Failed to patch employee' });
-  }
-});
-
-
-
 
 // Protected: Get all employees
 router.get('/', authenticateToken, async (req, res) => {
@@ -123,49 +86,6 @@ catch (err) {
     res.status(500).json({ message: 'Failed to create employee' });
 }
 
-});
-
-
-// Protected: Update employee
-router.put('/:id', authenticateToken, async (req, res) => {
-  try {
-    const { name, department, position, status, email, phone, address } = req.body;
-    // Validate required fields
-    if (!name || !department || !position) {
-      return res.status(400).json({ message: 'Name, Department, and Position are required.' });
-    }
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) {
-      return res.status(400).json({ message: 'Invalid email format' });
-    }
-    const updateData = {
-      name,
-      contact: {
-        email: email || '',
-        phone: phone || '',
-        address: address || ''
-      },
-      department,
-      position,
-      status: status || 'active'
-    };
-    const employee = await Employee.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
-    if (!employee) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-    res.json(employee);
-  } catch (err) {
-    console.error('Error updating employee:', err);
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ message: err.message });
-    }
-    res.status(500).json({ message: 'Failed to update employee' });
-  }
 });
 
 export default router;
