@@ -4,6 +4,7 @@ import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import EmployeeManagement from '../pages/EmployeeManagement';
 import ProtectedRoute from './ProtectedRoute';
+import UserManagement from '../pages/UserManagement';
 
 const AppRoutes = () => (
   <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
@@ -17,6 +18,11 @@ const AppRoutes = () => (
       <Route path="/employees" element={
         <ProtectedRoute>
           <EmployeeManagement />
+        </ProtectedRoute>
+      } />
+      <Route path="/users" element={
+        <ProtectedRoute>
+          <UserManagement />
         </ProtectedRoute>
       } />
     </Routes>

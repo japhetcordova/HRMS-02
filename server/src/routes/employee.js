@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 import Employee from '../models/Employee.js';
 
 const router = express.Router();
@@ -36,8 +36,8 @@ router.get('/', authenticateToken, async (req, res) => {
 
 });
 
-// Protected: Create employee
-router.post('/', authenticateToken, async (req, res) => {
+// Admin only: Create employee
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
         // Validate required fields
         const { name, email, department, position } = req.body;
@@ -89,8 +89,8 @@ catch (err) {
 });
 
 
-// Protected: Update employee (full update)
-router.put('/:id', authenticateToken, async (req, res) => {
+// Admin only: Update employee (full update)
+router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { name, department, position, status, email, phone, address } = req.body;
     if (!name || !department || !position) {
@@ -137,8 +137,8 @@ router.put('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Protected: Partially update employee
-router.patch('/:id', authenticateToken, async (req, res) => {
+// Admin only: Partially update employee
+router.patch('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const allowedFields = ['name', 'department', 'position', 'status', 'email', 'phone', 'address'];
     const updateData = {};
@@ -188,8 +188,8 @@ router.patch('/:id', authenticateToken, async (req, res) => {
 });
 
 
-// Protected: Delete employee
-router.delete('/:id', authenticateToken, async (req, res) => {
+// Admin only: Delete employee
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const employee = await Employee.findByIdAndDelete(req.params.id);
     if (!employee) {
