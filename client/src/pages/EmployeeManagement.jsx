@@ -4,7 +4,7 @@ import { fetchEmployees } from '../services/api';
 import AddEmployeeModal from '../components/AddEmployeeModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
 import ConfirmModal from '../components/ConfirmModal';
-import axios from 'axios';
+import { deleteEmployee } from '../services/api';
 import Spinner from '../components/Spinner';
 
 const EmployeeManagement = () => {
@@ -62,9 +62,7 @@ const EmployeeManagement = () => {
   // Confirm deletion of an employee
   const confirmDelete = async () => {
     try {
-      await axios.delete(`/api/employees/${employeeToDelete._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteEmployee(employeeToDelete._id, token);
       setEmployees(employees.filter((emp) => emp._id !== employeeToDelete._id));
       setConfirmModalOpen(false);
       setEmployeeToDelete(null);
