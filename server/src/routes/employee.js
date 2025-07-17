@@ -142,14 +142,31 @@ router.patch('/:id', authenticateToken, async (req, res) => {
   try {
     const allowedFields = ['name', 'department', 'position', 'status', 'email', 'phone', 'address'];
     const updateData = {};
+    let emailToUpdate;
     for (const field of allowedFields) {
-      if (req.body[field] !== undefined) {
+      const value = req.body[field];
+      if (value !== undefined && value !== '') {
+        if (field === 'email') {
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+          }
+          emailToUpdate = value;
+        }
         if (['email', 'phone', 'address'].includes(field)) {
           updateData.contact = updateData.contact || {};
-          updateData.contact[field] = req.body[field];
+          updateData.contact[field] = value;
         } else {
-          updateData[field] = req.body[field];
+          updateData[field] = value;
         }
+      }
+    }
+    // Check for duplicate email (exclude current employee)
+    if (emailToUpdate) {
+      const existingEmployee = await Employee.findOne({ 'contact.email': emailToUpdate, _id: { $ne: req.params.id } });
+      if (existingEmployee) {
+        return res.status(409).json({ message: 'Employee with this email already exists' });
       }
     }
     const employee = await Employee.findByIdAndUpdate(
