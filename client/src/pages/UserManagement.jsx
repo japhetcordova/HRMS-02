@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import RegisterUserModal from '../components/RegisterUserModal';
-import useAuth from '../components/useAuth';
+import useAuth from '../context/useAuth';
 
 const UserManagement = () => {
   const { user } = useAuth();
