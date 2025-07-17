@@ -51,11 +51,22 @@ const EditEmployeeModal = ({ isOpen, onClose, employee, onEmployeeUpdated }) => 
       setError('Name, Department, and Position are required.');
       return;
     }
+    // Validate email format if provided
+    if (form.contact.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.contact.email)) {
+        setError('Invalid email format');
+        return;
+      }
+    }
     setLoading(true);
     try {
-      // Flatten contact fields for backend compatibility
+      // Explicitly flatten contact fields for backend compatibility
       const payload = {
-        ...form,
+        name: form.name,
+        department: form.department,
+        position: form.position,
+        status: form.status,
         email: form.contact.email,
         phone: form.contact.phone,
         address: form.contact.address,
@@ -76,7 +87,7 @@ const EditEmployeeModal = ({ isOpen, onClose, employee, onEmployeeUpdated }) => 
       }
     } catch (err) {
       console.log(err);
-      setError('Failed to update employee.');
+      setError(err.response?.data?.message || 'Failed to update employee.');
     } finally {
       setLoading(false);
     }
