@@ -88,4 +88,103 @@ catch (err) {
 
 });
 
+
+// Protected: Update employee (full update)
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    const { name, department, position, status, email, phone, address } = req.body;
+    if (!name || !department || !position) {
+      return res.status(400).json({ message: 'Name, Department, and Position are required.' });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+    // Check for duplicate email (exclude current employee)
+    if (email) {
+      const existingEmployee = await Employee.findOne({ 'contact.email': email, _id: { $ne: req.params.id } });
+      if (existingEmployee) {
+        return res.status(409).json({ message: 'Employee with this email already exists' });
+      }
+    }
+    // Build contact object only with provided fields
+    const contact = {};
+    if (email !== undefined) contact.email = email;
+    if (phone !== undefined) contact.phone = phone;
+    if (address !== undefined) contact.address = address;
+    const updateData = {
+      name,
+      contact,
+      department,
+      position,
+      status: status || 'active'
+    };
+    const employee = await Employee.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+    res.json(employee);
+  } catch (err) {
+    console.error('Error updating employee:', err);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ message: err.message });
+    }
+    res.status(500).json({ message: 'Failed to update employee' });
+  }
+});
+
+// Protected: Partially update employee
+router.patch('/:id', authenticateToken, async (req, res) => {
+  try {
+    const allowedFields = ['name', 'department', 'position', 'status', 'email', 'phone', 'address'];
+    const updateData = {};
+    let emailToUpdate;
+    for (const field of allowedFields) {
+      const value = req.body[field];
+      if (value !== undefined && value !== '') {
+        if (field === 'email') {
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+          }
+          emailToUpdate = value;
+        }
+        if (['email', 'phone', 'address'].includes(field)) {
+          updateData.contact = updateData.contact || {};
+          updateData.contact[field] = value;
+        } else {
+          updateData[field] = value;
+        }
+      }
+    }
+    // Check for duplicate email (exclude current employee)
+    if (emailToUpdate) {
+      const existingEmployee = await Employee.findOne({ 'contact.email': emailToUpdate, _id: { $ne: req.params.id } });
+      if (existingEmployee) {
+        return res.status(409).json({ message: 'Employee with this email already exists' });
+      }
+    }
+    const employee = await Employee.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+    res.json(employee);
+  } catch (err) {
+    console.error('Error patching employee:', err);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ message: err.message });
+    }
+    res.status(500).json({ message: 'Failed to patch employee' });
+  }
+});
+
 export default router;
