@@ -1,10 +1,10 @@
-
-
 import React, { useEffect, useState } from 'react';
 import useAuth from '../components/useAuth';
 import { fetchEmployees } from '../services/api';
 import AddEmployeeModal from '../components/AddEmployeeModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
+import ConfirmModal from '../components/ConfirmModal';
+import axios from 'axios';
 
 const EmployeeManagement = () => {
   const { token } = useAuth();
@@ -14,6 +14,31 @@ const EmployeeManagement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
+
+  const handleDelete = (employee) => {
+    setEmployeeToDelete(employee);
+    setConfirmModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!employeeToDelete) return;
+    try {
+      const deleteUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/employees/${employeeToDelete._id}`;
+      await axios.delete(deleteUrl, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setConfirmModalOpen(false);
+      setEmployeeToDelete(null);
+      loadEmployees();
+    } catch (err) {
+      console.error('Failed to delete employee:', err);
+      setConfirmModalOpen(false);
+      setEmployeeToDelete(null);
+      alert('Failed to delete employee.');
+    }
+  };
 
   const loadEmployees = async () => {
     setLoading(true);
@@ -48,17 +73,20 @@ const EmployeeManagement = () => {
       >
         Add Employee
       </button>
+
       <AddEmployeeModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onEmployeeAdded={loadEmployees}
       />
+
       <EditEmployeeModal
         isOpen={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         employee={selectedEmployee}
         onEmployeeUpdated={loadEmployees}
       />
+
       {loading ? (
         <p className="text-gray-500">Loading employees...</p>
       ) : error ? (
@@ -76,7 +104,7 @@ const EmployeeManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {employees.map(emp => (
+              {employees.map((emp) => (
                 <tr key={emp._id}>
                   <td className="py-2 px-4 border-b">{emp.name}</td>
                   <td className="py-2 px-4 border-b">{emp.department}</td>
@@ -89,6 +117,12 @@ const EmployeeManagement = () => {
                     >
                       Edit
                     </button>
+                    <button
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      onClick={() => handleDelete(emp)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -96,6 +130,17 @@ const EmployeeManagement = () => {
           </table>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModalOpen}
+        title="Delete Employee"
+        message={`Are you sure you want to delete ${employeeToDelete?.name}? This action cannot be undone.`}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setConfirmModalOpen(false);
+          setEmployeeToDelete(null);
+        }}
+      />
     </div>
   );
 };
