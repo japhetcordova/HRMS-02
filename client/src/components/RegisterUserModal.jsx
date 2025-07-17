@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuth from '../components/useAuth';
+import useAuth from '../context/useAuth';
 import axios from 'axios';
 import Modal from '../components/Modal';
 import FormInput from '../components/FormInput';

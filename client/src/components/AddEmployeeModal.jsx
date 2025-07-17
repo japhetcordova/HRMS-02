@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuth from './useAuth';
+import useAuth from '../context/useAuth';
 import { addEmployee } from '../services/api';
 import Modal from './Modal';
 import FormInput from './FormInput';

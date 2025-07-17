@@ -1,6 +1,6 @@
+import { createContext, useState, useEffect } from 'react';
 
-import React, { useState, useEffect } from 'react';
-import AuthContext from '../components/AuthContext.js'; // or update to correct path if needed
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -8,14 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      try {
-        const storedUser = localStorage.getItem('user');
-        setUser(storedUser ? JSON.parse(storedUser) : null);
-      } catch (err) {
-        console.error('Failed to parse user from localStorage:', err);
-        setUser(null);
-        localStorage.removeItem('user');
-      }
+      setUser(JSON.parse(localStorage.getItem('user')));
     } else {
       setUser(null);
     }
@@ -44,4 +37,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+export default AuthContext;
