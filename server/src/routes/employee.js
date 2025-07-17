@@ -100,13 +100,21 @@ router.put('/:id', authenticateToken, async (req, res) => {
     if (email && !emailRegex.test(email)) {
       return res.status(400).json({ message: 'Invalid email format' });
     }
+    // Check for duplicate email (exclude current employee)
+    if (email) {
+      const existingEmployee = await Employee.findOne({ 'contact.email': email, _id: { $ne: req.params.id } });
+      if (existingEmployee) {
+        return res.status(409).json({ message: 'Employee with this email already exists' });
+      }
+    }
+    // Build contact object only with provided fields
+    const contact = {};
+    if (email !== undefined) contact.email = email;
+    if (phone !== undefined) contact.phone = phone;
+    if (address !== undefined) contact.address = address;
     const updateData = {
       name,
-      contact: {
-        email: email || '',
-        phone: phone || '',
-        address: address || ''
-      },
+      contact,
       department,
       position,
       status: status || 'active'
