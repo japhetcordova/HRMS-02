@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import EmployeeManagement from '../src/pages/EmployeeManagement';
+import EmployeeManagement from '../EmployeeManagement';
 
 // Mock useAuth to simulate token
 vi.mock('../../src/context/useAuth', () => ({
