@@ -1,8 +1,8 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import app from '../index.js';
-import User from '../models/User.js';
-import Employee from '../models/Employee.js';
+import app from '../../index.js';
+import User from '../../models/User.js';
+import Employee from '../../models/Employee.js';
 import bcrypt from 'bcryptjs';
 
 const TEST_DB_URI = process.env.TEST_DB_URI || 'mongodb://localhost:27017/hrms-test';
