@@ -13,7 +13,7 @@ const employeesMock = [
 ];
 let employeesState = [...employeesMock];
 
-vi.mock('../src/services/api', () => ({
+vi.mock('../../src/services/api', () => ({
   fetchEmployees: vi.fn(async () => employeesState),
   addEmployee: vi.fn(async (employee) => {
     const newEmployee = { ...employee, _id: String(Date.now()) };
