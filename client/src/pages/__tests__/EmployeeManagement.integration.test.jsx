@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import EmployeeManagement from '../src/pages/EmployeeManagement';
 
@@ -23,6 +23,9 @@ vi.mock('../../src/services/api', () => ({
 }));
 
 describe('EmployeeManagement integration', () => {
+  afterEach(() => {
+    employeesState = [...employeesMock];
+  });
   it('adds a new employee and shows it in the list', async () => {
     render(<EmployeeManagement />);
     // Wait for initial employees to load
