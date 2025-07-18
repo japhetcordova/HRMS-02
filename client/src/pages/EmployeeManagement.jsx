@@ -23,9 +23,7 @@ const EmployeeManagement = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await fetchEmployees(token);
-      // Support both array and object response
-      let data = response?.data;
+      const data = await fetchEmployees(token);
       if (Array.isArray(data)) {
         setEmployees(data);
       } else if (Array.isArray(data?.employees)) {
@@ -117,33 +115,35 @@ const EmployeeManagement = () => {
             <table className="min-w-full bg-white text-black border rounded shadow text-xs sm:text-sm md:text-base">
               <thead>
                 <tr>
-                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Name</th>
-                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Department</th>
-                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Position</th>
-                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Status</th>
-                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">Actions</th>
+                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">Name</th>
+                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">Department</th>
+                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">Position</th>
+                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-center">Status</th>
+                  <th className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {(Array.isArray(employees) ? employees : []).map((emp) => (
                   <tr key={emp._id}>
-                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.name}</td>
-                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.department}</td>
-                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.position}</td>
-                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">{emp.status}</td>
-                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap">
-                      <button
-                        className="px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 mr-2 w-full sm:w-auto mb-1 sm:mb-0"
-                        onClick={() => handleEdit(emp)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 w-full sm:w-auto"
-                        onClick={() => handleDelete(emp)}
-                      >
-                        Delete
-                      </button>
+                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">{emp.name}</td>
+                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">{emp.department}</td>
+                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-left">{emp.position}</td>
+                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-center">{emp.status}</td>
+                    <td className="py-2 px-2 sm:px-4 border-b whitespace-nowrap text-center">
+                      <div className="inline-flex gap-2">
+                        <button
+                          className="px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+                          onClick={() => handleEdit(emp)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          onClick={() => handleDelete(emp)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

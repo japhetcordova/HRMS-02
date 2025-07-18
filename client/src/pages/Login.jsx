@@ -12,9 +12,29 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  const validate = () => {
+    const errors = {};
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      errors.email = 'Enter a valid email address';
+    }
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    const errors = validate();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     try {
       const data = await loginUser(email, password);
       login(data.user, data.token);
@@ -33,21 +53,28 @@ const Login = () => {
           <label className="block mb-1 font-semibold">Email</label>
           <input
             type="email"
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+            className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300 ${fieldErrors.email ? 'border-red-500' : ''}`}
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
+            aria-invalid={!!fieldErrors.email}
+            aria-describedby={fieldErrors.email ? 'email-error' : undefined}
           />
+          {fieldErrors.email && (
+            <div id="email-error" className="text-red-500 text-xs mt-1">{fieldErrors.email}</div>
+          )}
         </div>
         <div className="mb-6">
           <label className="block mb-1 font-semibold">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300 pr-10"
+              className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300 pr-10 ${fieldErrors.password ? 'border-red-500' : ''}`}
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
+              aria-invalid={!!fieldErrors.password}
+              aria-describedby={fieldErrors.password ? 'password-error' : undefined}
             />
             <button
               type="button"
@@ -63,6 +90,9 @@ const Login = () => {
               )}
             </button>
           </div>
+          {fieldErrors.password && (
+            <div id="password-error" className="text-red-500 text-xs mt-1">{fieldErrors.password}</div>
+          )}
         </div>
         <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-semibold text-xs sm:text-base">Login</button>
       </form>
