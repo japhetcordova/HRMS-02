@@ -28,6 +28,13 @@ export async function getAdminToken() {
 }
 
 export async function cleanup() {
-  await User.deleteMany({});
-  await Employee.deleteMany({});
+    try{
+        await User.deleteMany({});
+        await Employee.deleteMany({});
+    }
+    catch(err){ 
+        console.error('Error during cleanup: ', err);
+        throw err;
+    }
+  
 }
