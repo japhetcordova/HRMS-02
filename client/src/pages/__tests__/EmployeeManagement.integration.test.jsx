@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import EmployeeManagement from '../src/pages/EmployeeManagement';
 
 // Mock useAuth to simulate token
-vi.mock('../src/context/useAuth', () => ({
+vi.mock('../../src/context/useAuth', () => ({
   default: () => ({ token: 'test-token' })
 }));
 
