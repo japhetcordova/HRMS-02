@@ -5,7 +5,7 @@ import User from '../models/User.js';
 import Employee from '../models/Employee.js';
 import bcrypt from 'bcryptjs';
 
-const TEST_DB_URI = 'mongodb://localhost:27017/hrms-test';
+const TEST_DB_URI = process.env.TEST_DB_URI || 'mongodb://localhost:27017/hrms-test';
 
 beforeAll(async () => {
   await mongoose.connect(TEST_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
