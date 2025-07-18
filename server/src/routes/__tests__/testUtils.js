@@ -17,14 +17,25 @@ afterAll(async () => {
 });
 
 export async function getAdminToken() {
-  const password = 'adminpass123';
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const admin = new User({ name: 'Admin', email: 'admin@test.com', password: hashedPassword, role: 'admin' });
-  await admin.save();
-  const res = await request(app)
-    .post('/api/auth/login')
-    .send({ email: 'admin@test.com', password });
-  return res.body.token;
+    try{
+        const password = 'adminpass123';
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const admin = new User({ name: 'Admin', email: 'admin@test.com', password: hashedPassword, role: 'admin' });
+        await admin.save();
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({ email: 'admin@test.com', password });
+        if(!res.body.token){
+            throw new Error('Failed to get admin token from login response');
+        }
+        return res.body.token;
+    }
+    catch(err){
+        console.error("Error getting admin token:", err);
+        throw err;
+    }
+  
+  
 }
 
 export async function cleanup() {
